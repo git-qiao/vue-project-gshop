@@ -6,5 +6,6 @@ import routes from './routes'
 Vue.use(VueRouter)
 
 export default new VueRouter({
-  routes
+  routes,
+  mode: 'history' // 设置路由导航不带#
 })

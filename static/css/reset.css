@@ -96,3 +96,12 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.msite{
+  background-color: #f3f3f3;
+}
+
+/*取消掉控制台关于passive的报错*/
+*{
+  /*touch-action: none;*/
+}

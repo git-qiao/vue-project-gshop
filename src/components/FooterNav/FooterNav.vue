@@ -1,23 +1,68 @@
 <template>
-  <div id="app">
-    Footer
-  </div>
+  <footer class="footer_guide border-1px" v-show="$route.meta.isShow">
+    <a href="javascript:;" class="guide_item" @click="go('/msite')" :class="{on:$route.path === '/msite'}">
+      <span class="item_icon">
+        <i class="iconfont icon-waimai"></i>
+      </span>
+      <span>外卖</span>
+    </a>
+    <a href="javascript:;" class="guide_item" @click="go('/search')" :class="{on:$route.path === '/search'}">
+      <span class="item_icon">
+        <i class="iconfont icon-search"></i>
+      </span>
+      <span>搜索</span>
+    </a>
+    <a href="javascript:;" class="guide_item" @click="go('/order')" :class="{on:$route.path === '/order'}">
+      <span class="item_icon">
+        <i class="iconfont icon-dingdan"></i>
+      </span>
+      <span>订单</span>
+    </a>
+    <a href="javascript:;" class="guide_item" @click="go('/profile')" :class="{on:$route.path === '/profile'}">
+      <span class="item_icon">
+        <i class="iconfont icon-geren"></i>
+      </span>
+      <span>我的</span>
+    </a>
+  </footer>
 </template>
 
 <script>
 export default {
+  methods: {
+    go (path) {
+      this.$router.replace(path)
+    }
+  }
 }
 </script>
 
 <style scoped lang="stylus">
-  div
+  .footer_guide  //footer
+    top-border-1px(#e4e4e4)
     position fixed
-    width 100%
-    text-align center
-    bottom 0
+    z-index 100
     left 0
-    background-color darkred
-    height 38px
-    line-height 38px
-    color #ffffff
+    right 0
+    bottom 0
+    background-color #fff
+    width 100%
+    height 50px
+    display flex
+    .guide_item
+      display flex
+      flex 1
+      text-align center
+      flex-direction column
+      align-items center
+      margin 5px
+      color #999999
+      &.on
+        color #02a774
+      span
+        font-size 12px
+        margin-top 2px
+        margin-bottom 2px
+        .iconfont
+          font-size 22px
 </style>

@@ -10,13 +10,13 @@ import { // 导入mutations方法常量
 export default {
   // 更改address状态数据
   [GET_ADDRESS] (state, {address}) {
-    state.address = address.data
+    state.address = address
   },
   // 更改shops状态数据
   [GET_SHOPS] (state, {shops}) {
-    state.shops = shops.data
+    state.shops = shops
   },
   [GET_CATEGORIES] (state, {categorys}) {
-    state.categorys = categorys.data
+    state.categorys = categorys
   }
 }

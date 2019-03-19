@@ -19,21 +19,30 @@ export default {
     // 获取经纬度后续使用
     const {longitude, latitude} = state
     // 发送请求
-    const address = await reqLocation(longitude, latitude)
-    // 调用commit触发mutation
-    commit(GET_ADDRESS, {address})
+    const result = await reqLocation(longitude, latitude)
+    if (result.code===0) {
+      const address = result.data
+      // 调用commit触发mutation
+      commit(GET_ADDRESS, {address})
+    }
   },
 
   // 获取入口部分
   async getCategorys ({commit, state}) {
-    const categorys = await reqCategorys()
-    commit(GET_CATEGORIES, {categorys})
+    const result = await reqCategorys()
+    if (result.code === 0) {
+      const categorys = result.data
+      commit(GET_CATEGORIES, {categorys})
+    }
+
   },
   // 获取商家列表部分
   async getShops ({commit, state}) {
     const {longitude, latitude} = state
-    const shops = await reqShops(longitude, latitude)
-
-    commit(GET_SHOPS, {shops})
+    const result = await reqShops(longitude, latitude)
+    if (result.code === 0) {
+      const shops = result.data
+      commit(GET_SHOPS, {shops})
+    }
   }
 }

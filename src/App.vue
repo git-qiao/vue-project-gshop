@@ -30,10 +30,6 @@
     mounted () {
       // 1.触发标题部分
       this.$store.dispatch('getAddress')
-      // 2.触发商家列表
-      this.$store.dispatch('getShops')
-      // 3.触发快捷入口列表
-      this.$store.dispatch('getCategorys')
     }
   }
 </script>

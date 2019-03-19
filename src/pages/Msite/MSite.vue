@@ -14,112 +14,21 @@
     </Header>
     <!--首页导航-->
     <nav class="msite_nav">
-      <div class="swiper-container">
+      <div class="swiper-container" v-if="categorys.length">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
+          <div class="swiper-slide" v-for="(cs,index) in categorysArr" :key="index">
+            <a href="javascript:" class="link_to_food" v-for="c in cs" :key="c.id">
               <div class="food_container">
-                <img src="./imgs/nav/1.jpg">
+                <img :src="'https://fuss10.elemecdn.com/'+c.image_url">
               </div>
-              <span>甜品饮品</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/2.jpg">
-              </div>
-              <span>商超便利</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/3.jpg">
-              </div>
-              <span>美食</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/4.jpg">
-              </div>
-              <span>简餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/5.jpg">
-              </div>
-              <span>新店特惠</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/6.jpg">
-              </div>
-              <span>准时达</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/7.jpg">
-              </div>
-              <span>预订早餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/8.jpg">
-              </div>
-              <span>土豪推荐</span>
-            </a>
-          </div>
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/9.jpg">
-              </div>
-              <span>甜品饮品</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/10.jpg">
-              </div>
-              <span>商超便利</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/11.jpg">
-              </div>
-              <span>美食</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/12.jpg">
-              </div>
-              <span>简餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/13.jpg">
-              </div>
-              <span>新店特惠</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/14.jpg">
-              </div>
-              <span>准时达</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/1.jpg">
-              </div>
-              <span>预订早餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="./imgs/nav/2.jpg">
-              </div>
-              <span>土豪推荐</span>
+              <span>{{c.title}}</span>
             </a>
           </div>
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
       </div>
+      <div v-else><img src="./imgs/msite_back.svg" alt=""></div>
     </nav>
     <!--首页附近商家-->
     <div class="msite_shop_list">
@@ -149,17 +58,57 @@
       ShopItems
     },
     computed: {
-      ...mapState(['address', 'categorys'])
+      ...mapState(['address', 'categorys']),
+      // 处理categorys，成二维数组，满足我们遍历到界面
+      categorysArr () {
+        const {categorys} = this
+        // 空的二维数组
+        let arr = []
+        let smallArr = []
+        categorys.forEach( c => {
+          // 将小数组保存到大数组(只能保存1次)
+          if (smallArr.length === 0) {
+            arr.push(smallArr)
+          }
+          // 将c保存小数组 (最大长度是8)
+          smallArr.push(c)
+          // 如果当前小数组满了, 准备一个新的小数组
+          if (smallArr.length ===8) {
+            smallArr = []
+          }
+        })
+        return arr
+      }
     },
     mounted () {
+      // console.log(this)
+      // 2.触发商家列表
+      this.$store.dispatch('getShops')
+      // 3.触发快捷入口列表
+      this.$store.dispatch('getCategorys')
+
       // 创建swiper对象的时机? 必须在列表页面显示之后
-      new Swiper ('.swiper-container', {
+      /*new Swiper ('.swiper-container', {
         loop: true, // 循环模式选项
         // 如果需要分页器
         pagination: {
           el: '.swiper-pagination',
         }
-      })
+      })*/
+    },
+    watch: {
+      categorys () {
+        // 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新
+        this.$nextTick(() => {
+          new Swiper ('.swiper-container', {
+            loop: true, // 循环模式选项
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            }
+          })
+        })
+      }
     }
   }
 </script>

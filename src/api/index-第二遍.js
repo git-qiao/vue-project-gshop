@@ -8,9 +8,7 @@ import ajax from './ajax'
 const BASE = '/api'
 
 //1.根据经纬度获取位置
-export const reqLocation = function (longitude, latitude) {
-  return ajax(`${BASE}/position/${latitude},${longitude}`)
-}
+export const reqLocation = (longitude, latitude) => ajax(BASE+`/position/${latitude},${longitude}`)
 
 //2.获取食品分类列表
 export const reqCategorys = () => ajax(`${BASE}/index_category`)

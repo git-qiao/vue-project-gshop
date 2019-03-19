@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部-->
-    <Header title="昌平区北七家宏福科技园(337省道北)">
+    <Header :title="address.name || '定位...'">
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
       </span>
@@ -135,6 +135,11 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
+  import Swiper from 'swiper'
+  import 'swiper/dist/css/swiper.min.css'
+
   import Header from '../../components/Header/Header'
   import ShopItems from '../../components/ShopItems/ShopItems'
 
@@ -142,12 +147,24 @@
     components: {
       Header,
       ShopItems
+    },
+    computed: {
+      ...mapState(['address', 'categorys'])
+    },
+    mounted () {
+      // 创建swiper对象的时机? 必须在列表页面显示之后
+      new Swiper ('.swiper-container', {
+        loop: true, // 循环模式选项
+        // 如果需要分页器
+        pagination: {
+          el: '.swiper-pagination',
+        }
+      })
     }
   }
 </script>
 
 <style scoped lang="stylus">
-  @import "./css/swiper.css"
   @import "../../common/stylus/mixins.styl"
   .msite  //首页
     width 100%

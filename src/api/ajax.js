@@ -24,7 +24,7 @@ export default function ajax(url, data={}, type='GET') {
       })
       .catch(err => {
         // 不执行reject  直接统一处理
-        alert('出错了')
+        alert('出错了'+err.message)
       })
   })
 

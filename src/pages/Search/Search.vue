@@ -21,6 +21,8 @@
   @import "../../common/stylus/mixins.styl"
   .search  //搜索
     width 100%
+    height 100%
+    background-color #f3f3f3
     .search_form
       clearFix()
       margin-top 45px

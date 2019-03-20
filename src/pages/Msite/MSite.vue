@@ -9,7 +9,8 @@
         <span class="header_title_text ellipsis">昌平区北七家宏福科技园(337省道北)</span>
       </span>-->
       <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
+        <span class="header_login_text" @click="$router.push('/login')" v-if="!user._id">登录</span>
+        <span class="header_login_text" @click="logout" v-else>退出</span>
       </span>
     </Header>
     <!--首页导航-->
@@ -45,9 +46,9 @@
 
 <script>
   import {mapState} from 'vuex'
-
   import Swiper from 'swiper'
   import 'swiper/dist/css/swiper.min.css'
+  import {MessageBox} from 'mint-ui'
 
   import Header from '../../components/Header/Header'
   import ShopItems from '../../components/ShopItems/ShopItems'
@@ -58,7 +59,7 @@
       ShopItems
     },
     computed: {
-      ...mapState(['address', 'categorys']),
+      ...mapState(['address', 'categorys', 'user']),
       // 处理categorys，成二维数组，满足我们遍历到界面
       categorysArr () {
         const {categorys} = this
@@ -108,6 +109,13 @@
             }
           })
         })
+      }
+    },
+    methods: {
+      logout () {
+        MessageBox.confirm('确定要退出登录?').then(action => {
+          this.$store.dispatch('resetUser')
+        }).catch(action => {})
       }
     }
   }

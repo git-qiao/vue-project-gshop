@@ -4,13 +4,17 @@
 import { // 导入接口
   reqLocation,
   reqCategorys,
-  reqShops
+  reqShops,
+  reqUser,
+  logout
 } from '../api'
 
 import { // 导入mutations方法常量
   GET_ADDRESS,
   GET_CATEGORIES,
-  GET_SHOPS
+  GET_SHOPS,
+  GET_USER,
+  RESET_USER
 } from './mutation-types'
 
 export default {
@@ -34,8 +38,8 @@ export default {
       const categorys = result.data
       commit(GET_CATEGORIES, {categorys})
     }
-
   },
+
   // 获取商家列表部分
   async getShops ({commit, state}) {
     const {longitude, latitude} = state
@@ -44,5 +48,25 @@ export default {
       const shops = result.data
       commit(GET_SHOPS, {shops})
     }
+  },
+
+  // 操作用户信息状态数据部分的同步action
+  saveUser ({commit}, user) {
+    commit(GET_USER, user)
+  },
+
+  // 根据会话获取用户信息的异步action
+  async getUser ({commit}) {
+    const result = await reqUser()
+    if (result.code === 0) {
+      commit(GET_USER, result.data)
+    }
+
+  },
+
+  // 退出登录清空user的异步action
+  async resetUser ({commit}) {
+    const result = await logout()
+    commit(RESET_USER)
   }
 }

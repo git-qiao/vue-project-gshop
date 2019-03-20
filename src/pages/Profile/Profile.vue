@@ -1,23 +1,23 @@
 <template>
   <section class="profile">
     <Header title="我的"/>
-    <section class="profile-number" @click="$router.push('/login')">
+    <section class="profile-number" @click="$router.push(user._id ? '/userinfo' : '/login')">
       <a href="javascript:" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
-          <p>
-                <span class="user-icon">
-                  <i class="iconfont icon-shouji icon-mobile"></i>
-                </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+          <p class="user-info-top" v-if="!user.phone">{{user.name? user.name:'登录/注册'}}</p>
+          <p v-if="!user.name">
+            <span class="user-icon">
+              <i class="iconfont icon-shouji icon-mobile"></i>
+            </span>
+            <span class="icon-mobile-number">{{user.phone? user.phone:'暂无绑定手机号'}}</span>
           </p>
         </div>
         <span class="arrow">
-              <i class="iconfont icon-jiantou1"></i>
-            </span>
+          <i class="iconfont icon-jiantou1"></i>
+        </span>
       </a>
     </section>
     <section class="profile_info_data border-1px">
@@ -88,14 +88,28 @@
         </div>
       </a>
     </section>
+    <mt-button class="btn" v-if="user._id" @click="logoutHandle" type="danger" style="width: 100%;">退出登录</mt-button>
   </section>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+  import {MessageBox} from 'mint-ui'
+
   import Header from '../../components/Header/Header'
   export default {
     components: {
       Header
+    },
+    computed: {
+      ...mapState(['user'])
+    },
+    methods: {
+      logoutHandle () {
+        MessageBox.confirm('确定要退出登录?').then(action => {
+          this.$store.dispatch('resetUser')
+        }).catch(action => {})
+      }
     }
   }
 </script>
@@ -104,6 +118,8 @@
   @import "../../common/stylus/mixins.styl"
   .profile //我的
     width 100%
+    height: 100%;
+    background: #f3f3f3
     .profile-number
       margin-top 45.5px
       .profile-link
@@ -232,4 +248,9 @@
             .icon-jiantou1
               color #bbb
               font-size 10px
+    .btn
+      width 100%
+      height 46px
+      margin-top 10px
+      font-size 16px
 </style>

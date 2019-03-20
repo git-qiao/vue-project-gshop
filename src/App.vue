@@ -30,10 +30,13 @@
     mounted () {
       // 1.触发标题部分
       this.$store.dispatch('getAddress')
+      // 根据会话获取用户信息
+      this.$store.dispatch('getUser')
     }
   }
 </script>
 
-<style>
-
+<style lang="stylus">
+  #app
+    height 100%
 </style>

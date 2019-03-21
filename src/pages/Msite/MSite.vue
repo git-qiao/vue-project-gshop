@@ -59,7 +59,12 @@
       ShopItems
     },
     computed: {
-      ...mapState(['address', 'categorys', 'user']),
+      // ...mapState(['address', 'categorys', 'user']),
+      ...mapState({
+        address: state => state.msite.address,
+        categorys: state => state.msite.categorys,
+        user: state => state.user.user
+      }),
       // 处理categorys，成二维数组，满足我们遍历到界面
       categorysArr () {
         const {categorys} = this
@@ -102,11 +107,11 @@
         // 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新
         this.$nextTick(() => {
           new Swiper ('.swiper-container', {
-            loop: true, // 循环模式选项
-            // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination',
-            }
+              loop: true, // 循环模式选项
+              // 如果需要分页器
+              pagination: {
+                el: '.swiper-pagination',
+              }
           })
         })
       }

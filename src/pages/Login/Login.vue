@@ -73,7 +73,9 @@
 
 <script>
   import {reqSendCode, reqPwdLogin, reqSmsLogin} from '../../api'
-  import {mapState} from 'vuex'
+  // import {mapState} from 'vuex'
+
+  import {Toast, MessageBox} from 'mint-ui'
 
   export default {
   /*
@@ -106,7 +108,6 @@
       const reg = /^1\d{10}$/
       return reg.test(phone)
     },
-    ...mapState(['user'])
   },
   methods: {
     // 点击发送验证码
@@ -124,9 +125,15 @@
       // 2.发送Ajax
       const result = await reqSendCode(phone)
       if (result.code === 0) { //成功
-        alert('发送成功')
+        Toast({
+          message: '发送成功',
+          duration: 1500
+        })
       } else { //失败
-        alert(result.msg)
+        Toast({
+          message: result.msg,
+          duration: 1500
+        })
         // 停止定时器
         this.verNum = 0
       }
@@ -173,7 +180,7 @@
           this.$router.replace('/profile')
         } else {
           // 登录失败
-          alert(result.msg)
+          MessageBox.alert(result.msg)
         }
     },
     // 点击图形验证码，更新图片

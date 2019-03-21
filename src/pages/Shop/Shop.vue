@@ -17,11 +17,22 @@
 </template>
 
 <script>
+  import {reqGoodsMock, reqRatingsMock, reqInfoMock} from '../../api'
   import ShopHeader from '../../components/ShopHeader/ShopHeader'
 
   export default {
     components: {
       ShopHeader
+    },
+    async mounted () {
+      // 测试Ajax的请求是否会被mock拦截，但是还会返回数据
+      const result1 = await reqGoodsMock()
+      const result2 = await reqRatingsMock()
+      const result3 = await reqInfoMock()
+
+      console.log(result1)
+      console.log(result2)
+      console.log(result3)
     }
   }
 </script>

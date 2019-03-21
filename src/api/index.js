@@ -32,3 +32,11 @@ export const reqUser = () => ajax(`${BASE}/userinfo`)
 
 //10.用户登出
 export const logout = () => ajax(`${BASE}/logout`)
+
+// mock拦截
+//11.接受goods数据
+export const reqGoodsMock = () => ajax('/goods')
+//12.接受goods数据
+export const reqRatingsMock = () => ajax('/ratings')
+//13.接受goods数据
+export const reqInfoMock = () => ajax('/info')

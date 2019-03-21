@@ -102,7 +102,10 @@
       Header
     },
     computed: {
-      ...mapState(['user'])
+      // ...mapState(['user'])
+      ...mapState({
+        user: state => state.user.user
+      })
     },
     methods: {
       logoutHandle () {

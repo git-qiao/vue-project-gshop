@@ -3,17 +3,24 @@
     <Header title="订单"/>
     <section class="order_no_login">
       <img src="./imgs/order/person.png">
-      <h3>登录后查看外卖订单</h3>
-      <button>立即登陆</button>
+      <h3>{{user._id ? '暂无订单' : '登录后查看外卖订单'}}</h3>
+      <button @click="$router.push('/login')" v-if="!user._id">立即登陆</button>
     </section>
   </section>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
   import Header from '../../components/Header/Header'
   export default {
     components: {
       Header
+    },
+    computed: {
+      ...mapState({
+        user: state => state.user.user
+      })
     }
   }
 </script>
@@ -31,11 +38,11 @@
         display block
         width 100%
         height 30%
-      >h3
+      h3
         padding 10px 0
         font-size 17px
         color #6a6a6a
-      >button
+      button
         display inline-block
         background #02a774
         font-size 14px

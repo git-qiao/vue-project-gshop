@@ -9,8 +9,10 @@ import router from './router'
 import store from './store'
 
 import Star from './components/Star/Star'
+import CartControl from './components/CartControl/CartControl'
 
 Vue.component('Star', Star)
+Vue.component('CartControl', CartControl)
 Vue.component(Button.name, Button)
 
 Vue.config.productionTip = false

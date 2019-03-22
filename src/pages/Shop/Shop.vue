@@ -26,13 +26,13 @@
     },
     async mounted () {
       // 测试Ajax的请求是否会被mock拦截，但是还会返回数据
-      const result1 = await reqGoodsMock()
+      /*const result1 = await reqGoodsMock()
       const result2 = await reqRatingsMock()
       const result3 = await reqInfoMock()
+      console.log(result1, result2, result3)*/
 
-      console.log(result1)
-      console.log(result2)
-      console.log(result3)
+      // 请求action里的getShopInfo得到商家的详细信息
+      this.$store.dispatch('getShopInfo')
     }
   }
 </script>

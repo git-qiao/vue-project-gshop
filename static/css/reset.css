@@ -103,5 +103,9 @@ body {
 
 /*取消掉控制台关于passive的报错*/
 *{
-  /*touch-action: none;*/
+  touch-action: none;
+}
+.split{
+  height: 10px;
+  background-color: #f3f3f3;
 }

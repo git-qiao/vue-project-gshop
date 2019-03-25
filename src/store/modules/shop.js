@@ -90,11 +90,13 @@ const actions = {
   },
 
   // 获取商户评价
-  async getShopRatings ({commit}) {
+  async getShopRatings ({commit}, fn) {
     const result = await reqRatingsMock()
     if (result.code === 0) {
-      const rating = result.data
-      commit(GET_RATING, {rating})
+      const ratings = result.data
+      commit(GET_RATING, {ratings})
+      // 手动执行回调
+      typeof fn === 'function' && fn()
     }
   },
 
@@ -130,6 +132,22 @@ const getters = {
     const {cartFoods} = state
     return cartFoods.reduce((pre,item) => {
       return pre+item.count*item.price
+    }, 0)
+  },
+  // 全部评论数
+  ratingAll (state) {
+    const {ratings} = state
+    return ratings.length
+  },
+  // 推荐评论数
+  ratingRec (state) {
+    const {ratings} = state
+    return ratings.reduce((pre, rating) => {
+      let num = 0
+      if (rating.rateType===0) {
+         num = 1
+      }
+      return pre + num
     }, 0)
   }
 }

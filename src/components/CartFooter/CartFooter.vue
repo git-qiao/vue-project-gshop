@@ -40,7 +40,7 @@
       </transition>
     </div>
     <transition name="fade">
-      <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
+      <div class="list-mask" v-show="listShow" @click="toggleShow" ref="mask"></div>
     </transition>
   </div>
 </template>
@@ -120,7 +120,14 @@
       toggleShow () {
         // 只有总数大于0才切换
         if (this.cartFoodsCount>0) {
-          this.isShow = !this.isShow
+          const _this = event.target
+          const target = this.$refs.mask
+          if (_this !== target) {
+            this.isShow = !this.isShow
+          } else {
+            this.isShow = false
+          }
+
         }
       },
       // 清空购物车的操作
@@ -227,7 +234,7 @@
       width: 100%
       transform translateY(-100%)
       &.move-enter-active, &.move-leave-active
-        transition: all 0.5s
+        transition: all 0.3s
       &.move-enter, &.move-leave-to
         transform: translateY(0%)
       .list-header
@@ -283,7 +290,7 @@
     opacity: 1
     background: rgba(7, 17, 27, 0.6)
     &.fade-enter-active, &.fade-leave-active
-      transition: all 0.5s
+      transition: all 0.3s
     &.fade-enter, &.fade-leave-to
       opacity: 0
 </style>

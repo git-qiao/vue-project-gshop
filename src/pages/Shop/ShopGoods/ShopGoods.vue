@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="goods">
-      <div class="menu-wrapper">
+      <div class="menu-wrapper" ref="lastLiHeight">
         <ul ref="tabCont">
           <!-- current为选中的class类名 -->
           <li
@@ -28,10 +28,17 @@
           >
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px"
+                  v-for="(food, index) in good.foods"
+                  :key="index"
+                  @click="emitFood(food)"
+              >
                 <div class="icon">
-                  <img width="57" height="57"
-                       :src="food.icon">
+                  <img
+                    width="57"
+                    height="57"
+                    :src="food.icon"
+                  >
                 </div>
                 <div class="content">
                   <h2 class="name">{{food.name}}</h2>
@@ -41,6 +48,7 @@
                     <span>好评率{{food.rating}}%</span></div>
                   <div class="price">
                     <span class="now">￥{{food.price}}</span>
+                    <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
                       <CartControl :food="food"/>
@@ -53,6 +61,8 @@
       </div>
       <CartFooter/>
     </div>
+    <!--弹框显示食物-->
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
@@ -61,15 +71,18 @@
   import BScroll from 'better-scroll'
   // import CartControl from '../../../components/CartControl/CartControl'
   import CartFooter from '../../../components/CartFooter/CartFooter'
+  import Food from '../../../components/Food/Food'
 
   export default {
     components: {
-      CartFooter
+      CartFooter,
+      Food
     },
     data () {
       return{
         scrollY: 0,  // 右侧列表的滑动坐标
-        tops: [],     //每一个分类的顶部距离ul盒子的距离
+        tops: [],     // 每一个分类的顶部距离ul盒子的距离
+        food: {},   // 保存食物的数据
       }
     },
     mounted () {
@@ -123,6 +136,7 @@
         this.goodsScroll.on('scroll', ({x,y}) => {
           console.log(x + '--scroll--' + y)
           this.scrollY = Math.abs(y)
+
         })
         // 结合上面（probeType: 1）使用实时更新scrollY的值
         this.goodsScroll.on('scrollEnd', ({x,y}) => {
@@ -138,6 +152,10 @@
         let top=0
         tops.push(top)
         const lis = this.$refs.ulCont.getElementsByClassName('food-list-hook')
+        // 给最后一个元素设置最小高度，避免出现不必要的bug
+        const height = this.$refs.lastLiHeight.clientHeight  // 显示的高度
+        lis[lis.length-1].style.minHeight = height+'px'
+
         const lisTruth = Array.prototype.slice.call(lis);
         lisTruth.forEach(li => {
           top += li.clientHeight
@@ -158,6 +176,14 @@
 
         // 右侧滑动到指定的位置
         this.goodsScroll.scrollTo(0, -y, 500)
+      },
+
+      // 给Food组件传数据
+      emitFood (food) {
+        // 派发食物数据
+        this.food = food
+        // 显示框  调用子组件中的方法
+        this.$refs.food.toggleShow()
       }
     }
   }

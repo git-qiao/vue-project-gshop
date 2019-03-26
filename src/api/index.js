@@ -5,7 +5,8 @@
 * */
 import ajax from './ajax'
 // const BASE = 'http://localhost:5000'
-const BASE = '/api'
+const BASE = '/api'  // 打包时需要去掉
+// const BASE = ''
 
 //1.根据经纬度获取位置
 export const reqLocation = function (longitude, latitude) {

@@ -78,116 +78,128 @@
   import {Toast, MessageBox} from 'mint-ui'
 
   export default {
-  /*
-  * 1. passType控制类名，实现密码/短信登录的切换
-  * 2. 登录信息的相关数据设置
-  * 3. 短信登录区块验证码的显示/隐藏/倒计时
-  * 4. 密码登录区块
-  * */
+    /*
+    * 1. passType控制类名，实现密码/短信登录的切换
+    * 2. 登录信息的相关数据设置
+    * 3. 短信登录区块验证码的显示/隐藏/倒计时
+    * 4. 密码登录区块
+    * */
 
-  data () {
-    return {
-      passType: true, //true短信登录  false密码登录
-      // 登录相关参数
-      login: {
-        phone: '', // 手机号
-        code: '', // 短信验证码
-        name: '', // 用户名
-        pwd: '', // 密码
-        captcha: '' // 图形验证码
+    data () {
+      return {
+        passType: true, //true短信登录  false密码登录
+        // 登录相关参数
+        login: {
+          phone: '', // 手机号
+          code: '', // 短信验证码
+          name: '', // 用户名
+          pwd: '', // 密码
+          captcha: '' // 图形验证码
+        },
+        // 控制验证码倒计时数
+        verNum: 0,
+        // 密码的显示和隐藏
+        pwdShow: false
+      }
+    },
+    computed: {
+      verificationCode () { // false发送验证码不显示  true发送验证码显示
+        const {phone} = this.login
+        const reg = /^1\d{10}$/
+        return reg.test(phone)
       },
-      // 控制验证码倒计时数
-      verNum: 0,
-      // 密码的显示和隐藏
-      pwdShow: false
-    }
-  },
-  computed: {
-    verificationCode () { // false发送验证码不显示  true发送验证码显示
-      const {phone} = this.login
-      const reg = /^1\d{10}$/
-      return reg.test(phone)
     },
-  },
-  methods: {
-    // 点击发送验证码
-    async sendVerificationCode () {
-      const {phone} = this.login
-      // 1.页面的显示
-      this.verNum = 30
-      const timer = setInterval(()=>{
-        this.verNum--
-        if (this.verNum <= 0){
-          this.verNum = 0
-          clearInterval(timer)
-        }
-      }, 1000)
-      // 2.发送Ajax
-      const result = await reqSendCode(phone)
-      if (result.code === 0) { //成功
-        Toast({
-          message: '发送成功',
-          duration: 1500
-        })
-      } else { //失败
-        Toast({
-          message: result.msg,
-          duration: 1500
-        })
-        // 停止定时器
-        this.verNum = 0
-      }
-    },
-    // 登录
-    async loginHan () {
-      const {passType, login, verificationCode} = this
-      const {phone, code, name, pwd, captcha} = login
-      let result
-      // 短信登录
-      if (passType) {
-        if (!verificationCode) {
-          return alert('请输入正确的手机号')
-        } else if (!/^[0-9]{6}$/.test(code)) {
-          return alert('请输入6位数字验证码')
-        }
-        // 发送请求
-        result = await reqSmsLogin(phone, code)
-        // 如果成功了，停止计时
-        if (result.code == 0) {
+    methods: {
+      // 点击发送验证码
+      async sendVerificationCode () {
+        const {phone} = this.login
+        // 1.页面的显示
+        this.verNum = 30
+        const timer = setInterval(()=>{
+          this.verNum--
+          if (this.verNum <= 0){
+            this.verNum = 0
+            clearInterval(timer)
+          }
+        }, 1000)
+        // 2.发送Ajax
+        const result = await reqSendCode(phone)
+        if (result.code === 0) { //成功
+          Toast({
+            message: '发送成功',
+            duration: 1500
+          })
+        } else { //失败
+          Toast({
+            message: result.msg,
+            duration: 1500
+          })
+          // 停止定时器
           this.verNum = 0
         }
-      } else { // 密码登录
-        if (!name.trim()) {
-          return alert('用户名不能为空')
-        } else if (!pwd.trim()) {
-          return alert('密码不能为空')
-        } else if (!/^[0-9a-zA-Z]{4}$/.test(captcha)) {
-          return alert('请输符合要求的4位验证码')
+      },
+      // 登录
+      async loginHan () {
+        const {passType, login, verificationCode} = this
+        const {phone, code, name, pwd, captcha} = login
+        let result
+        // 短信登录
+        if (passType) {
+          if (!verificationCode) {
+            return alert('请输入正确的手机号')
+          } else if (!/^[0-9]{6}$/.test(code)) {
+            return alert('请输入6位数字验证码')
+          }
+          // 发送请求
+          result = await reqSmsLogin(phone, code)
+          // 如果成功了，停止计时
+          if (result.code == 0) {
+            this.verNum = 0
+          }
+        } else { // 密码登录
+          if (!name.trim()) {
+            return alert('用户名不能为空')
+          } else if (!pwd.trim()) {
+            return alert('密码不能为空')
+          } else if (!/^[0-9a-zA-Z]{4}$/.test(captcha)) {
+            return alert('请输符合要求的4位验证码')
+          }
+          // 发送请求
+          result = await reqPwdLogin({name, pwd, captcha})
+          // 如果失败了，刷新图片
+          if (result.code === 1) {
+            this.uploadCaptcha ()
+          }
         }
-        // 发送请求
-        result = await reqPwdLogin({name, pwd, captcha})
-        // 如果失败了，刷新图片
-        if (result.code === 1) {
-          this.uploadCaptcha ()
-        }
-      }
-      // 统一对结果进行处理
-        if (result.code === 0) {
-          // 成功登录
-          const user = result.data
-          this.$store.dispatch('saveUser', user) //触发cation中的saveUser方法
-          // 跳转到/profile
-          this.$router.replace('/profile')
+        // 统一对结果进行处理
+          if (result.code === 0) {
+            // 成功登录
+            const user = result.data
+            this.$store.dispatch('saveUser', user) //触发cation中的saveUser方法
+            // 跳转到/profile
+            this.$router.replace('/profile')
+          } else {
+            // 登录失败
+            MessageBox.alert(result.msg)
+          }
+      },
+      // 点击图形验证码，更新图片
+      uploadCaptcha () {
+        this.$refs.captcha.src = 'http://localhost:5000/captcha?time=' + Date.now()
+      },
+    },
+    // 组件前置守卫
+    beforeRouteEnter (to, from, next) {
+      next(component => { // 函数会延迟到组件对象创建后执行
+        console.log(to, from)
+        // 在当前组件对象被创建前调用, 不能直接访问this(不是组件对象)
+        if (!component.$store.state.user.user._id) {
+          next()  // 没有登录，放行（去登陆）
         } else {
-          // 登录失败
-          MessageBox.alert(result.msg)
+          next('/profile')  // 如果已经登录，跳转到个人中心
         }
-    },
-    // 点击图形验证码，更新图片
-    uploadCaptcha () {
-      this.$refs.captcha.src = 'http://localhost:5000/captcha?time=' + Date.now()
+      })
     }
-  },
 }
 </script>
 

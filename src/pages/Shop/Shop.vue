@@ -12,7 +12,11 @@
         <router-link to="/shop/info" replace>详情</router-link>
       </div>
     </div>
-    <router-view/>
+
+    <!--keep-alive 缓存路由组件对象-->
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 

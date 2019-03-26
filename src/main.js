@@ -12,7 +12,7 @@ import store from './store'
 import Star from './components/Star/Star'
 import CartControl from './components/CartControl/CartControl'
 
-import './utils/date-format'  //引入日期格式化的工具函数
+import './filters'  //引入过滤器模块，只需要执行一次即可注册到全局Vue函数对象上
 
 import loading from './common/imgs/loading.gif'
 
@@ -26,6 +26,10 @@ Vue.config.productionTip = false
 Vue.use(VueLazyload,{ // 全局定义了一个全局指令 lazy
   loading
 })
+
+// 将store对象保存到Vue函数对象上
+// 测试导航守卫的用法
+Vue.store = store
 
 /* eslint-disable no-new */
 new Vue({

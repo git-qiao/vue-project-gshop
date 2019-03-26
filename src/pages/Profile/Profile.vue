@@ -38,7 +38,7 @@
     </section>
     <section class="profile_my_order border-1px">
       <!-- 我的订单 -->
-      <a href='javascript:' class="my_order">
+      <a href='javascript:;' class="my_order" @click.prevent="$router.push('/a')">
             <span>
               <i class="iconfont icon-order-s"></i>
             </span>
@@ -50,7 +50,7 @@
         </div>
       </a>
       <!-- 积分商城 -->
-      <a href='javascript:' class="my_order">
+      <a href='javascript:;' class="my_order" @click.prevent="$router.push('/b')">
             <span>
               <i class="iconfont icon-jifen"></i>
             </span>
@@ -62,7 +62,7 @@
         </div>
       </a>
       <!-- 硅谷外卖会员卡 -->
-      <a href="javascript:" class="my_order">
+      <a href="javascript:;" class="my_order">
             <span>
               <i class="iconfont icon-vip"></i>
             </span>
@@ -88,6 +88,7 @@
         </div>
       </a>
     </section>
+    <router-link to="/login">导航守卫测试--之组件守卫--000</router-link>
     <mt-button class="btn" v-if="user._id" @click="logoutHandle" type="danger" style="width: 100%;">退出登录</mt-button>
   </section>
 </template>
